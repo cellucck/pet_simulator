@@ -137,6 +137,20 @@ class Player:
         '''
         pass
 
+    def perform_task(self, task):
+        '''
+        this will be the function that player has going when they want
+        to complete a task/in-app game (i.e game could be pong, or 
+        maybe they have to clean up the pet's area)
+        
+        arguments
+        task :task: the task the player is trying to complete. Must
+                    be available to complete (not on cooldown)
+                    
+        '''
+        pass
+
+
 
 
     
