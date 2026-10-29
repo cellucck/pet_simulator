@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
+import sys
 
-class Pet_sprite(Sprite):
-    pass
+
+
