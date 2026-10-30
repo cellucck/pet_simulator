@@ -44,22 +44,28 @@ class Pet(pygame.sprite.Sprite):
 
 class Button:
     def __init__(self, text, x, y, width, height, normal_color, 
-                 hover_color, action = None):
+                 hover_color, status=False, action = None):
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
         self.normal_color = normal_color
         self.hover_color = hover_color
         self.color = normal_color
         self.action = action
+        self.status = status
 
-        self.text_surf = font.render(text, True, 'cornsilk')
-        self.text_rect = self.text_surf.get_rect(center=self.rect.center)
+        if self.status == False:
+            self.text_surf = font.render(text, True, 'cornsilk')
+            self.text_rect = self.text_surf.get_rect(center=self.rect.center)
+        else:
+            self.text_surf = font.render(text, True, 'cornsilk')
+            self.text_rect = self.text_surf.get_rect(midtop=self.rect.midtop)
 
     def set_color(self, new_color):
         self.color = new_color
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
         surface.blit(self.text_surf, self.text_rect)
+        
 
     def update(self, event):
         mouse_pos = pygame.mouse.get_pos()
@@ -95,19 +101,82 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
+def open_hunger():
+    print("Opened Hunger")
+
+def open_hydration():
+    print("Opened Hydration")
+
+def open_play():
+    print("Opened Play")
+
 
 #Instantiate buttons
-btn_inventory = Button("Inventory", 15, SCREEN_HEIGHT - 225, 200, 50, 'chartreuse4', 'chartreuse3', open_inventory)
-btn_shop = Button("Open Shop", 15, SCREEN_HEIGHT - 150 , 200, 50, "cadetblue", "cadetblue1", open_shop)
-btn_quit = Button("Quit Game", 15, SCREEN_HEIGHT - 75, 135, 50, "brown3", "brown2", quit_game)
+btn_inventory = Button("Inventory", 15, SCREEN_HEIGHT - 225, 200, 50, 'chartreuse4', 'chartreuse3', False, open_inventory)
+btn_shop = Button("Open Shop", 15, SCREEN_HEIGHT - 150 , 200, 50, "cadetblue", "cadetblue1", False, open_shop)
+btn_quit = Button("Quit Game", 15, SCREEN_HEIGHT - 75, 135, 50, "brown3", "brown2", False, quit_game)
+
+#FIXME - Need Buttons for all the Statuses
+
+btn_hunger = Button("Hunger", 10, 25, 150, 75, 'coral2', 'coral1', True, open_hunger)
+btn_hydration = Button("Hydration", 170, 25, 150, 75, 'cyan3', 'cyan2', True, open_hydration)
+btn_mood = Button("Mood", 330, 25, 150, 75, 'darkolivegreen3', 'darkolivegreen3', True)
+btn_energy = Button('Energy', 490, 25, 150, 75, 'orchid3', 'orchid2', True, open_play)
+
+##idealy would have some status data coming from another file (pet.py I think)
+HUNGER_STAT = 0.75     #FIXME - eventually can do Pet.get_hunger()
+HYDRATION_STAT = 0.5    #FIXME - eventuall can do Pet.get_hydration()
+MOOD_STAT = 0.3
+ENERGY_STAT = 0.8
+
+
+hunger_shadow = Button("", 22, 75, 125, 10, "gray",'gray', False, None)
+hunger_bar = Button("", 22, 75, 125*HUNGER_STAT, 10, 'white', 'white', False, None)
+
+
+hydration_shadow = Button("", 182, 75, 125, 10, 'gray', 'gray', False, None)
+hydration_bar = Button("", 182, 75, 125*HYDRATION_STAT, 10, 'white', 'white', False, None)
+
+
+mood_shadow = Button("", 342, 75, 125, 10, 'gray', 'gray', False, None)
+mood_bar = Button("", 342, 75, 125*MOOD_STAT, 10, 'white', 'white', False, None)
+
+
+energy_shadow = Button("", 502, 75, 125, 10, 'gray', 'gray', False, None)
+energy_bar = Button("", 502, 75, 125*ENERGY_STAT, 10, 'white', 'white', False, None)
+
+
+
+
+
 
 Buttons = []
+
+Buttons.append(btn_hunger)
+Buttons.append(btn_hydration)
+Buttons.append(btn_mood)
+Buttons.append(btn_energy)
+
+
+#These need to be drawn first so that the status bars are on top
+Buttons.append(hunger_shadow)
+Buttons.append(hydration_shadow)
+Buttons.append(mood_shadow)
+Buttons.append(energy_shadow)
+
+Buttons.append(hunger_bar)
+Buttons.append(hydration_bar)
+Buttons.append(mood_bar)
+Buttons.append(energy_bar)
+
 Buttons.append(btn_inventory)
 Buttons.append(btn_shop)
 Buttons.append(btn_quit)
 
+
+
 while True:
-    screen.fill(('aquamarine2'))
+    screen.fill(('powderblue'))
 
     events = pygame.event.get()
     for event in events:
@@ -116,6 +185,7 @@ while True:
 
         for button in Buttons:
             button.update(event)
+        
         dragon.update()
 
     pygame.draw.rect(screen, (255, 0, 0), dragon.hitbox, 2)
