@@ -1,9 +1,9 @@
 '''
-For Version 1.0 Release, this is the only programming file. 
-This acts as more of a proof of concept more than anything, with 
+For Version 1.0 Release, this is the only programming file.
+This acts as more of a proof of concept more than anything, with
 simple implementation of the pygame package and what we want our
-web app to look like. Beyond 1.0 Release, the project will have 
-multiple files as we implement more features like being able to 
+web app to look like. Beyond 1.0 Release, the project will have
+multiple files as we implement more features like being able to
 display different screens
 '''
 import pygame
@@ -18,9 +18,10 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Comic Sans", 24)
 
+
 class PetSprite(pygame.sprite.Sprite):
     '''
-    Blueprint for PetSprite object to be displayed 
+    Blueprint for PetSprite object to be displayed
     '''
     def __init__(self, base_image, happy_image, x, y):
         '''
@@ -36,7 +37,7 @@ class PetSprite(pygame.sprite.Sprite):
 
         # different pet image options
         self.normal_image = base_image
-        self.hover_image = happy_image 
+        self.hover_image = happy_image
 
         # current image state of the pet
         self.image = self.normal_image
@@ -44,10 +45,8 @@ class PetSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-        #define hitbox as smaller than image_rect for collision checking
+        # Define hitbox as smaller than image_rect for collision checking
         self.hitbox = self.rect.inflate(-150, -175)
-
-    
 
     def get_image(self):
         '''Return current image of PetSprite'''
@@ -61,25 +60,26 @@ class PetSprite(pygame.sprite.Sprite):
         '''Detect User Mouse Position and update self.image if hovering'''
         mouse_pos = pygame.mouse.get_pos()
 
-        #checks for collision with hitbox instead of the image_rect
+        # Checks for collision with hitbox instead of the image_rect
         if self.hitbox.collidepoint(mouse_pos):
             self.set_image(self.hover_image)
 
         else:
             self.set_image(self.normal_image)
 
+
 class Button:
     '''Blueprint for any Buttons in that will be displayed'''
-    def __init__(self, text, x, y, width, height, normal_color, 
-                 hover_color, status=False, action = None):
+    def __init__(self, text, x, y, width, height, normal_color,
+                 hover_color, status=False, action=None):
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
 
-        # color options 
+        # Color options
         self.normal_color = normal_color
         self.hover_color = hover_color
 
-        # current displayed button color
+        # Current displayed button color
         self.color = normal_color
 
         # action that the button performs when clicked
@@ -88,9 +88,9 @@ class Button:
         # True if button is a status button for the pet
         self.status: bool = status
 
-        # Writes button text on top for status buttons, 
+        # Writes button text on top for status buttons,
         # and in the center for non-status buttons
-        if self.status == False:
+        if self.status is False:
             self.text_surf = font.render(text, True, 'cornsilk')
             self.text_rect = self.text_surf.get_rect(center=self.rect.center)
         else:
@@ -100,7 +100,7 @@ class Button:
     def get_color(self):
         '''Return current button color'''
         return self.color
-    
+
     def set_color(self, new_color):
         '''Set current button color to arg: new_color'''
         self.color = new_color
@@ -109,7 +109,6 @@ class Button:
         '''draw button_rect and write text on button surface'''
         pygame.draw.rect(surface, self.color, self.rect)
         surface.blit(self.text_surf, self.text_rect)
-        
 
     def update(self, event):
         '''Detect User Mouse Position and update self.color if hovering'''
@@ -119,7 +118,7 @@ class Button:
         if self.rect.collidepoint(mouse_pos):
             self.set_color(self.hover_color)
 
-            # Checks for mouse clicks ONLY if 
+            # Checks for mouse clicks ONLY if
             # cursor is hovering over button
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.action:
@@ -127,11 +126,16 @@ class Button:
         else:
             self.color = self.normal_color
 
+
 # Uploading dragon PNGs and converting into pygame images
 new_size = (400, 400)
-dragon_normal = pygame.image.load('/Users/kevincellucci/Downloads/School_Work/CIS 350 - Software Engineering/Pet Sim Project/practice_code/assets/dragon0.png')
+dragon_normal = pygame.image.load(
+    '/Users/kevincellucci/Downloads/School_Work/CIS 350 - Software '
+    'Engineering/Pet Sim Project/practice_code/assets/dragon0.png')
 scaled_dragon_normal = pygame.transform.scale(dragon_normal, new_size)
-dragon_happy = pygame.image.load('/Users/kevincellucci/Downloads/School_Work/CIS 350 - Software Engineering/Pet Sim Project/practice_code/assets/dragon_happy.png')
+dragon_happy = pygame.image.load(
+    '/Users/kevincellucci/Downloads/School_Work/CIS 350 - Software '
+    'Engineering/Pet Sim Project/practice_code/assets/dragon_happy.png')
 scaled_dragon_happy = pygame.transform.scale(dragon_happy, new_size)
 
 # Instantiating a PetSprite with Dragon images
@@ -140,69 +144,84 @@ dragon = PetSprite(scaled_dragon_normal, scaled_dragon_happy, 125, 75)
 sprites = pygame.sprite.Group()
 sprites.add(dragon)
 
-
 # These methods are placeholders for now, will end up
 # being how we switch between displays in final project
 # build.
+
+
 def open_inventory():
     print("Opened Inventory")
 
+
 def open_shop():
     print("Opened Shop")
+
 
 def quit_game():
     pygame.quit()
     sys.exit()
 
+
 def open_hunger():
     print("Opened Hunger")
 
+
 def open_hydration():
     print("Opened Hydration")
+
 
 def open_play():
     print("Opened Play")
 
 
-#Instantiate buttons
-btn_inventory = Button("Inventory", 15, SCREEN_HEIGHT - 225, 200, 50, 'chartreuse4', 'chartreuse3', False, open_inventory)
-btn_shop = Button("Open Shop", 15, SCREEN_HEIGHT - 150 , 200, 50, "cadetblue", "cadetblue1", False, open_shop)
-btn_quit = Button("Quit Game", 15, SCREEN_HEIGHT - 75, 135, 50, "brown3", "brown2", False, quit_game)
-btn_hunger = Button("Hunger", 10, 25, 150, 75, 'coral2', 'coral1', True, open_hunger)
-btn_hydration = Button("Hydration", 170, 25, 150, 75, 'cyan3', 'cyan2', True, open_hydration)
-btn_mood = Button("Mood", 330, 25, 150, 75, 'darkolivegreen3', 'darkolivegreen3', True)
-btn_energy = Button('Energy', 490, 25, 150, 75, 'orchid3', 'orchid2', True, open_play)
+# Instantiate buttons
+btn_inventory = Button("Inventory", 15, SCREEN_HEIGHT - 225, 200, 50,
+                       'chartreuse4', 'chartreuse3', False, open_inventory)
+btn_shop = Button("Open Shop", 15, SCREEN_HEIGHT - 150 , 200, 50,
+                  "cadetblue", "cadetblue1", False, open_shop)
+btn_quit = Button("Quit Game", 15, SCREEN_HEIGHT - 75, 135, 50,
+                  "brown3", "brown2", False, quit_game)
+btn_hunger = Button("Hunger", 10, 25, 150, 75,
+                    'coral2', 'coral1', True, open_hunger)
+btn_hydration = Button("Hydration", 170, 25, 150, 75,
+                       'cyan3', 'cyan2', True, open_hydration)
+btn_mood = Button("Mood", 330, 25, 150, 75,
+                  'darkolivegreen3', 'darkolivegreen3', True)
+btn_energy = Button('Energy', 490, 25, 150, 75,
+                    'orchid3', 'orchid2', True, open_play)
 
 # Sclars values for status bars, static for prototype build
-HUNGER_STAT = 0.75     #FIXME - eventually can do Pet.get_hunger()
-HYDRATION_STAT = 0.5    #FIXME - eventuall can do Pet.get_hydration()
+HUNGER_STAT = 0.75     # FIXME - eventually can do Pet.get_hunger()
+HYDRATION_STAT = 0.5    # FIXME - eventuall can do Pet.get_hydration()
 MOOD_STAT = 0.3
 ENERGY_STAT = 0.8
 
-
 # Create buttons that represent the actual PetCare statues
-hunger_shadow = Button("", 22, 75, 125, 10, "gray",'gray', False, None)
-hunger_bar = Button("", 22, 75, 125*HUNGER_STAT, 10, 'white', 'white', False, None)
+hunger_shadow = Button("", 22, 75, 125, 10,
+                       "gray",'gray', False, None)
+hunger_bar = Button("", 22, 75, 125*HUNGER_STAT, 10,
+                    'white', 'white', False, None)
 
 
-hydration_shadow = Button("", 182, 75, 125, 10, 'gray', 'gray', False, None)
-hydration_bar = Button("", 182, 75, 125*HYDRATION_STAT, 10, 'white', 'white', False, None)
+hydration_shadow = Button("", 182, 75, 125, 10,
+                          'gray', 'gray', False, None)
+hydration_bar = Button("", 182, 75, 125*HYDRATION_STAT, 10,
+                       'white', 'white', False, None)
 
 
-mood_shadow = Button("", 342, 75, 125, 10, 'gray', 'gray', False, None)
-mood_bar = Button("", 342, 75, 125*MOOD_STAT, 10, 'white', 'white', False, None)
+mood_shadow = Button("", 342, 75, 125, 10,
+                     'gray', 'gray', False, None)
+mood_bar = Button("", 342, 75, 125*MOOD_STAT, 10,
+                  'white', 'white', False, None)
 
 
-energy_shadow = Button("", 502, 75, 125, 10, 'gray', 'gray', False, None)
-energy_bar = Button("", 502, 75, 125*ENERGY_STAT, 10, 'white', 'white', False, None)
-
-
-
-
+energy_shadow = Button("", 502, 75, 125, 10,
+                       'gray', 'gray', False, None)
+energy_bar = Button("", 502, 75, 125*ENERGY_STAT, 10,
+                    'white', 'white', False, None)
 
 # Create Button list and add all created buttons
 Buttons = []
-
 Buttons.append(btn_hunger)
 Buttons.append(btn_hydration)
 Buttons.append(btn_mood)
@@ -211,16 +230,13 @@ Buttons.append(hunger_shadow)
 Buttons.append(hydration_shadow)
 Buttons.append(mood_shadow)
 Buttons.append(energy_shadow)
-
 Buttons.append(hunger_bar)
 Buttons.append(hydration_bar)
 Buttons.append(mood_bar)
 Buttons.append(energy_bar)
-
 Buttons.append(btn_inventory)
 Buttons.append(btn_shop)
 Buttons.append(btn_quit)
-
 
 
 while True:
@@ -246,8 +262,7 @@ while True:
     for button in Buttons:
         button.draw(screen)
 
-
     pygame.display.flip()
     clock.tick(60)
 
-        
+    
