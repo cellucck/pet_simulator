@@ -1,11 +1,16 @@
 '''
-This will be the file for all the visuals/the actual
-interface the a user interacts with for the pet sim. 
-(GUI = graphical user interface)
+For Version 1.0 Release, this is the only programming file. 
+This acts as more of a proof of concept more than anything, with 
+simple implementation of the pygame package and what we want our
+web app to look like. Beyond 1.0 Release, the project will have 
+multiple files as we implement more features like being able to 
+display different screens
 '''
 import pygame
 import sys
 
+
+# Initializing pygame library, and defining display constants
 pygame.init()
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 640
@@ -13,29 +18,50 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Comic Sans", 24)
 
-class Pet(pygame.sprite.Sprite):
+class PetSprite(pygame.sprite.Sprite):
+    '''
+    Blueprint for PetSprite object to be displayed 
+    '''
     def __init__(self, base_image, happy_image, x, y):
+        '''
+        Initialize the Pet sprite object
+
+        Keyword Arguments:
+        base_image - pygame.image - the normal / resting image
+        happy_image - pygame.image - the hover state of our pet on home screen
+        x -- starting x position
+        y -- starting y poisiton
+        '''
         pygame.sprite.Sprite.__init__(self)
+
+        # different pet image options
         self.normal_image = base_image
         self.hover_image = happy_image 
 
+        # current image state of the pet
         self.image = self.normal_image
 
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+
+        #define hitbox as smaller than image_rect for collision checking
         self.hitbox = self.rect.inflate(-150, -175)
 
     
 
     def get_image(self):
+        '''Return current image of PetSprite'''
         return self.image
 
     def set_image(self, image_variant):
+        '''Set current image of PetSprite'''
         self.image = image_variant
 
     def update(self):
+        '''Detect User Mouse Position and update self.image if hovering'''
         mouse_pos = pygame.mouse.get_pos()
 
+        #checks for collision with hitbox instead of the image_rect
         if self.hitbox.collidepoint(mouse_pos):
             self.set_image(self.hover_image)
 
@@ -43,16 +69,27 @@ class Pet(pygame.sprite.Sprite):
             self.set_image(self.normal_image)
 
 class Button:
+    '''Blueprint for any Buttons in that will be displayed'''
     def __init__(self, text, x, y, width, height, normal_color, 
                  hover_color, status=False, action = None):
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
+
+        # color options 
         self.normal_color = normal_color
         self.hover_color = hover_color
-        self.color = normal_color
-        self.action = action
-        self.status = status
 
+        # current displayed button color
+        self.color = normal_color
+
+        # action that the button performs when clicked
+        self.action = action
+
+        # True if button is a status button for the pet
+        self.status: bool = status
+
+        # Writes button text on top for status buttons, 
+        # and in the center for non-status buttons
         if self.status == False:
             self.text_surf = font.render(text, True, 'cornsilk')
             self.text_rect = self.text_surf.get_rect(center=self.rect.center)
@@ -60,37 +97,53 @@ class Button:
             self.text_surf = font.render(text, True, 'cornsilk')
             self.text_rect = self.text_surf.get_rect(midtop=self.rect.midtop)
 
+    def get_color(self):
+        '''Return current button color'''
+        return self.color
+    
     def set_color(self, new_color):
+        '''Set current button color to arg: new_color'''
         self.color = new_color
+
     def draw(self, surface):
+        '''draw button_rect and write text on button surface'''
         pygame.draw.rect(surface, self.color, self.rect)
         surface.blit(self.text_surf, self.text_rect)
         
 
     def update(self, event):
+        '''Detect User Mouse Position and update self.color if hovering'''
         mouse_pos = pygame.mouse.get_pos()
 
-        #hover effect
+        # Hover effect
         if self.rect.collidepoint(mouse_pos):
             self.set_color(self.hover_color)
 
+            # Checks for mouse clicks ONLY if 
+            # cursor is hovering over button
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.action:
                     self.action()
         else:
             self.color = self.normal_color
 
-#creating dragon sprites
+# Uploading dragon PNGs and converting into pygame images
 new_size = (400, 400)
 dragon_normal = pygame.image.load('/Users/kevincellucci/Downloads/School_Work/CIS 350 - Software Engineering/Pet Sim Project/practice_code/assets/dragon0.png')
 scaled_dragon_normal = pygame.transform.scale(dragon_normal, new_size)
 dragon_happy = pygame.image.load('/Users/kevincellucci/Downloads/School_Work/CIS 350 - Software Engineering/Pet Sim Project/practice_code/assets/dragon_happy.png')
 scaled_dragon_happy = pygame.transform.scale(dragon_happy, new_size)
-dragon = Pet(scaled_dragon_normal, scaled_dragon_happy, 125, 75)
+
+# Instantiating a PetSprite with Dragon images
+dragon = PetSprite(scaled_dragon_normal, scaled_dragon_happy, 125, 75)
 
 sprites = pygame.sprite.Group()
 sprites.add(dragon)
 
+
+# These methods are placeholders for now, will end up
+# being how we switch between displays in final project
+# build.
 def open_inventory():
     print("Opened Inventory")
 
@@ -115,21 +168,19 @@ def open_play():
 btn_inventory = Button("Inventory", 15, SCREEN_HEIGHT - 225, 200, 50, 'chartreuse4', 'chartreuse3', False, open_inventory)
 btn_shop = Button("Open Shop", 15, SCREEN_HEIGHT - 150 , 200, 50, "cadetblue", "cadetblue1", False, open_shop)
 btn_quit = Button("Quit Game", 15, SCREEN_HEIGHT - 75, 135, 50, "brown3", "brown2", False, quit_game)
-
-#FIXME - Need Buttons for all the Statuses
-
 btn_hunger = Button("Hunger", 10, 25, 150, 75, 'coral2', 'coral1', True, open_hunger)
 btn_hydration = Button("Hydration", 170, 25, 150, 75, 'cyan3', 'cyan2', True, open_hydration)
 btn_mood = Button("Mood", 330, 25, 150, 75, 'darkolivegreen3', 'darkolivegreen3', True)
 btn_energy = Button('Energy', 490, 25, 150, 75, 'orchid3', 'orchid2', True, open_play)
 
-##idealy would have some status data coming from another file (pet.py I think)
+# Sclars values for status bars, static for prototype build
 HUNGER_STAT = 0.75     #FIXME - eventually can do Pet.get_hunger()
 HYDRATION_STAT = 0.5    #FIXME - eventuall can do Pet.get_hydration()
 MOOD_STAT = 0.3
 ENERGY_STAT = 0.8
 
 
+# Create buttons that represent the actual PetCare statues
 hunger_shadow = Button("", 22, 75, 125, 10, "gray",'gray', False, None)
 hunger_bar = Button("", 22, 75, 125*HUNGER_STAT, 10, 'white', 'white', False, None)
 
@@ -149,16 +200,13 @@ energy_bar = Button("", 502, 75, 125*ENERGY_STAT, 10, 'white', 'white', False, N
 
 
 
-
+# Create Button list and add all created buttons
 Buttons = []
 
 Buttons.append(btn_hunger)
 Buttons.append(btn_hydration)
 Buttons.append(btn_mood)
 Buttons.append(btn_energy)
-
-
-#These need to be drawn first so that the status bars are on top
 Buttons.append(hunger_shadow)
 Buttons.append(hydration_shadow)
 Buttons.append(mood_shadow)
@@ -183,15 +231,22 @@ while True:
         if event.type == pygame.QUIT:
             quit_game()
 
+        # Checks for any button clicks and enacts action
         for button in Buttons:
             button.update(event)
-        
+
         dragon.update()
 
+    # Draws Dragon Sprite Hitbox for development aid
     pygame.draw.rect(screen, (255, 0, 0), dragon.hitbox, 2)
+
+    # Draws all sprites and Buttons
     sprites.draw(screen)
+
     for button in Buttons:
         button.draw(screen)
+
+
     pygame.display.flip()
     clock.tick(60)
 
