@@ -1,0 +1,28 @@
+@startuml classes
+set namespaceSeparator none
+class "Button" as pet_sim_GUI.Button {
+  action : NoneType
+  color
+  hover_color
+  normal_color
+  rect
+  status : bool
+  text
+  text_rect
+  text_surf
+  draw(surface)
+  get_color()
+  set_color(new_color)
+  update(event)
+}
+class "PetSprite" as pet_sim_GUI.PetSprite {
+  hitbox
+  hover_image
+  image
+  normal_image
+  rect
+  get_image()
+  set_image(image_variant)
+  update()
+}
+@enduml
