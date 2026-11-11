@@ -3,13 +3,23 @@ import sys
 
 
 class Button:
-    '''Blueprint for any Buttons in that will be displayed'''
     def __init__(self, text, x, y, width, height, normal_color,
-                 hover_color, status=False, action=None):
+                 hover_color, rounded=False, status=False, action=None):
+        '''
+        Intizialize Button appearance and functionality
+        Keyword Arguments
+        text - The lettering the button will display
+        x, y - starting coordinates for the button rect
+        width, heigh - size indicators
+        normal_color, hover_color - resting and hovering color
+        status - True if a Pet Status button, False if not
+        action - what the button does if pressed
+        '''
         pygame.init()
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
         self.font = pygame.font.SysFont('Comic Sans', 24)
+        self.rounded = rounded
 
         # Color options
         self.normal_color = normal_color
@@ -43,10 +53,14 @@ class Button:
 
     def draw(self, surface):
         '''draw button_rect and write text on button surface'''
-        pygame.draw.rect(surface, self.color, self.rect)
-        surface.blit(self.text_surf, self.text_rect)
+        if self.rounded is True:
+            pygame.draw.rect(surface, self.color, self.rect, border_radius=15)
+            surface.blit(self.text_surf, self.text_rect)
+        else:
+            pygame.draw.rect(surface, self.color, self.rect)
+            surface.blit(self.text_surf, self.text_rect)
 
-    def update(self, event):
+    def update(self, event, scene):
         '''Detect User Mouse Position and update self.color if hovering'''
         mouse_pos = pygame.mouse.get_pos()
 
@@ -58,6 +72,6 @@ class Button:
             # cursor is hovering over button
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if self.action:
-                    self.action()
+                    self.action(scene)
         else:
             self.color = self.normal_color
