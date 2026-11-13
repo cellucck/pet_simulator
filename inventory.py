@@ -39,6 +39,9 @@ class Inventory(Scene):
     def open_home(self):
          self.gameStateManager.set_state('home')
 
+    def go_back(self):
+         self.gameStateManager.go_back()
+
     def quit_game(self):
             pygame.quit()
             sys.exit()
@@ -50,11 +53,11 @@ class Inventory(Scene):
 
 
 btn_home = Button("Home", 432, SCREEN_HEIGHT - 75, 200, 50,
-                  'chartreuse4', 'chartreuse3', False, False, Inventory.open_home)
+                  'chartreuse4', 'chartreuse3',"cornsilk", False, False, Inventory.open_home)
 btn_shop = Button("Open Shop", 222, SCREEN_HEIGHT - 75 , 200, 50,
-                  "cadetblue", "cadetblue1", False, False, Inventory.open_shop)
-btn_quit = Button("Quit Game", 12, SCREEN_HEIGHT - 75, 200, 50,
-                  "brown3", "brown2", False, False, Inventory.quit_game)
+                 "cadetblue", "cadetblue1","cornsilk", False, False, Inventory.open_shop)
+btn_back = Button("Back", 12, SCREEN_HEIGHT - 75, 200, 50,
+                  "brown3", "brown2","cornsilk", False, False, Inventory.go_back)
 
 
 ROWS = [57, 192, 327, 462]
@@ -75,7 +78,7 @@ for i in range(len(ROWS)):
          item_slot(i, j)
 
 
-INVENTORY_BUTTONS.append(btn_home)
+#INVENTORY_BUTTONS.append(btn_home)
 INVENTORY_BUTTONS.append(btn_shop)
-INVENTORY_BUTTONS.append(btn_quit)
+INVENTORY_BUTTONS.append(btn_back)
 

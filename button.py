@@ -4,7 +4,7 @@ import sys
 
 class Button:
     def __init__(self, text, x, y, width, height, normal_color,
-                 hover_color, rounded=False, status=False, action=None):
+                 hover_color, font_color, rounded=False, status=False, action=None):
         '''
         Intizialize Button appearance and functionality
         Keyword Arguments
@@ -24,6 +24,7 @@ class Button:
         # Color options
         self.normal_color = normal_color
         self.hover_color = hover_color
+        self.font_color = font_color
 
         # Current displayed button color
         self.color = normal_color
@@ -37,10 +38,10 @@ class Button:
         # Writes button text on top for status buttons,
         # and in the center for non-status buttons
         if self.status is False:
-            self.text_surf = self.font.render(text, True, 'cornsilk')
+            self.text_surf = self.font.render(text, True, self.font_color)
             self.text_rect = self.text_surf.get_rect(center=self.rect.center)
         else:
-            self.text_surf = self.font.render(text, True, 'cornsilk')
+            self.text_surf = self.font.render(text, True, self.font_color)
             self.text_rect = self.text_surf.get_rect(midtop=self.rect.midtop)
 
     def get_color(self):

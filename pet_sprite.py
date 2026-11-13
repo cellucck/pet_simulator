@@ -1,5 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
+import random
+import time
 
 
 
@@ -7,7 +9,7 @@ class PetSprite(pygame.sprite.Sprite):
     '''
     Blueprint for PetSprite object to be displayed
     '''
-    def __init__(self, base_image, happy_image, x, y):
+    def __init__(self, base_image, happy_image, blink, x, y):
         '''
         Initialize the Pet sprite object
 
@@ -22,6 +24,7 @@ class PetSprite(pygame.sprite.Sprite):
         # different pet image options
         self.normal_image = base_image
         self.hover_image = happy_image
+        self.blink = blink
 
         # current image state of the pet
         self.image = self.normal_image
@@ -50,6 +53,14 @@ class PetSprite(pygame.sprite.Sprite):
 
         else:
             self.set_image(self.normal_image)
+
+    def blink(self):
+        random_num = random.randint(1, 100)
+        if random_num == 1:
+            self.set_image(self.blink)
+            
+
+      
 
 
 
