@@ -7,9 +7,9 @@ SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 640
 
 class GoalLog(Scene):
-    def __init__(self, display, gameStateManager, goals_list,
-                 buttons_list):
-        super().__init__(display, gameStateManager)
+    def __init__(self, display, gameStateManager, pet, player,
+                 goals_list, buttons_list):
+        super().__init__(display, gameStateManager, pet, player)
         self.goals = goals_list
         self.buttons = buttons_list
 

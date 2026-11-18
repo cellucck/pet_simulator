@@ -10,9 +10,9 @@ SCREEN_HEIGHT = 640
 
 
 class Inventory(Scene):
-    def __init__(self, display, gameStateManager, button_list,
-                     sprites_list=None):
-            super().__init__(display, gameStateManager)
+    def __init__(self, display, gameStateManager, pet, player,
+                 button_list, sprites_list=None):
+            super().__init__(display, gameStateManager, pet, player)
             self.buttons = button_list
             self.sprites = sprites_list
 
@@ -32,9 +32,10 @@ class Inventory(Scene):
 
         for button in self.buttons:
              button.draw(self.display)
+        self.update_credits()
 
     def open_shop(self):
-         self.gameStateManager.set_state('shop')\
+         self.gameStateManager.set_state('shop')
 
     def open_home(self):
          self.gameStateManager.set_state('home')
@@ -49,6 +50,11 @@ class Inventory(Scene):
     def inspect_item(self):
         print('Look at THIS WOWWWW')
 
+    def update_credits(self):
+        self.buttons[-1] = Button(
+             f"Credits: {self.player.get_credits()}", 490, SCREEN_HEIGHT-95, 150, 75, 
+                'lightgreen', 'lawngreen', 'white', False, False, None)
+
 
 
 
@@ -58,6 +64,8 @@ btn_shop = Button("Open Shop", 222, SCREEN_HEIGHT - 75 , 200, 50,
                  "cadetblue", "cadetblue1","cornsilk", False, False, Inventory.open_shop)
 btn_back = Button("Back", 12, SCREEN_HEIGHT - 75, 200, 50,
                   "brown3", "brown2","cornsilk", False, False, Inventory.go_back)
+btn_credits = Button("Credits: ", 490, SCREEN_HEIGHT-95, 150, 75, 
+                     'lightgreen', 'lawngreen', 'white', False, False, None)
 
 
 ROWS = [57, 192, 327, 462]
@@ -66,7 +74,8 @@ COLUMNS = [10, 145, 280, 415]
 INVENTORY_BUTTONS = []
 
 def item_slot(i, j):
-    item_button = Button("", ROWS[i], COLUMNS[j], 125, 125, 'bisque2', 'blanchedalmond',
+    item_button = Button("", ROWS[i], COLUMNS[j], 125, 125, 'bisque2', 
+                        'blanchedalmond', 'gray',
                        True, False, Inventory.inspect_item)
     
     INVENTORY_BUTTONS.append(item_button)
@@ -81,4 +90,5 @@ for i in range(len(ROWS)):
 #INVENTORY_BUTTONS.append(btn_home)
 INVENTORY_BUTTONS.append(btn_shop)
 INVENTORY_BUTTONS.append(btn_back)
+INVENTORY_BUTTONS.append(btn_credits)
 

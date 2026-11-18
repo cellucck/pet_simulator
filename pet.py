@@ -8,17 +8,17 @@ something like
 from pets import pet_type
 '''
 class Pet:
-    def __init__(self, name, pet_type, color):
+    def __init__(self, name):
         self.name = name
-        self.pet_type = pet_type
         self.age: float = 0
-        self.hunger_status: float = 1
-        self.energy_status: float = 1
-        self.hydration_status: float = 1
+        self.hunger_status: float = 0.75
+        self.energy_status: float = 0.75
+        self.hydration_status: float = 0.75
+        self.mood_status: float = (self.hunger_status + self.energy_status + self.hydration_status)/3
+        self.status_list = [self.hunger_status, self.hydration_status, self.mood_status, self.energy_status]
         self.headware = None
         self.outfit = None
         self.footware = None
-        self.color = color
         self.current_animation = None #stand still
         
 
@@ -35,11 +35,18 @@ class Pet:
     def get_hunger(self):
         return self.hunger_status
 
+    def get_mood(self):
+        return self.mood_status
+
     def get_energy(self):
         return self.energy_status
 
     def get_hydration(self):
         return self.hydration_status
+
+    def get_statuses(self):
+        return self.status_list
+
 
     #these might get combined (e.g. self.appearance)
     def get_headware(self):

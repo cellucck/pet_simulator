@@ -76,3 +76,11 @@ class Button:
                     self.action(scene)
         else:
             self.color = self.normal_color
+
+    def change_length(self, new_length):
+        x = self.rect[0]
+        y = self.rect[1]
+        width =  new_length
+        height = self.rect[3]
+        self.rect = pygame.Rect(x, y, width, height)
+        

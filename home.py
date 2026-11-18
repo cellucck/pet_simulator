@@ -4,29 +4,26 @@ import sys
 from pet_sprite import PetSprite
 from button import Button
 import random
+from pet import Pet
 
 SCREEN_WIDTH = 650
 SCREEN_HEIGHT = 640
 
 
 class Home(Scene):
-    def __init__(self, display, gameStateManager, background, button_list,
-                 sprites_list):
-        super().__init__(display, gameStateManager)
+    def __init__(self, display, gameStateManager, pet, 
+                 player, background, button_list, sprites_list):
+        super().__init__(display, gameStateManager, pet, player)
         self.buttons = button_list
         self.sprites = sprites_list
         self.background = background
+        self.status_list = ["hunger", "hydration", "mood", "energy"]
     def run(self):
         self.display.blit(self.background, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_s]:
-                self.gameStateManager.set_state('shop')
-            if keys[pygame.K_i]:
-                self.gameStateManager.set_state('inventory')
             
             for button in self.buttons:
                 button.update(event, self)
@@ -34,10 +31,13 @@ class Home(Scene):
             self.sprites.update()
 
 
-
+        self.adjust_status()
+        self.update_credits()
         self.sprites.draw(self.display)
         for button in self.buttons:
             button.draw(self.display)
+
+        
 
     def open_inventory(self):
         self.gameStateManager.set_state('inventory')
@@ -61,6 +61,17 @@ class Home(Scene):
     def open_goals(self):
         self.gameStateManager.set_state('goal')
 
+    def adjust_status(self):
+        self.buttons[8].change_length(125*self.pet.get_hunger())
+        self.buttons[9].change_length(125*self.pet.get_hydration())
+        self.buttons[10].change_length(125*self.pet.get_mood())
+        self.buttons[11].change_length(125*self.pet.get_energy())
+
+    def update_credits(self):
+        self.buttons[-1] = Button(f"Credits: {self.player.get_credits()}", 490, SCREEN_HEIGHT-95, 150, 75, 
+                     'lightgreen', 'lawngreen', 'white', False, False, None)
+
+
 
 # Instantiate buttons
 btn_inventory = Button("Inventory", 15, SCREEN_HEIGHT - 225, 200, 50,
@@ -80,34 +91,31 @@ btn_mood = Button("Mood", 330, 25, 150, 75,
 btn_energy = Button('Energy', 490, 25, 150, 75,
                     'orchid3', 'orchid2',"cornsilk", False, True, Home.open_play)
 
-# Sclars values for status bars, static for prototype build
-HUNGER_STAT = 0.75     # FIXME - eventually can do Pet.get_hunger()
-HYDRATION_STAT = 0.5    # FIXME - eventuall can do Pet.get_hydration()
-MOOD_STAT = 0.3
-ENERGY_STAT = 0.8
+btn_credits = Button("Credits: ", 490, SCREEN_HEIGHT-95, 150, 75, 
+                     'lightgreen', 'lawngreen', 'white', False, False, None)
 
 # Create buttons that represent the actual PetCare statues
 hunger_shadow = Button("", 22, 75, 125, 10,
                        "gray",'gray',"cornsilk",  False, None)
-hunger_bar = Button("", 22, 75, 125*HUNGER_STAT, 10,
-                    'white', 'white', False, None)
+hunger_bar = Button("", 22, 75, 0, 10,
+                    'white', 'white', "cornsilk")
 
 
 hydration_shadow = Button("", 182, 75, 125, 10,
                           'gray', 'gray',"cornsilk", False, None)
-hydration_bar = Button("", 182, 75, 125*HYDRATION_STAT, 10,
-                       'white', 'white',"cornsilk", False, None)
+hydration_bar = Button("", 182, 75, 0, 10,
+                       'white', 'white',"cornsilk")
 
 
 mood_shadow = Button("", 342, 75, 125, 10,
-                     'gray', 'gray',"cornsilk", False, None)
-mood_bar = Button("", 342, 75, 125*MOOD_STAT, 10,
-                  'white', 'white',"cornsilk", False, None)
+                     'gray', 'gray',"cornsilk")
+mood_bar = Button("", 342, 75, 0, 10,
+                  'white', 'white',"cornsilk")
 
 
 energy_shadow = Button("", 502, 75, 125, 10,
                        'gray', 'gray',"cornsilk", False, None)
-energy_bar = Button("", 502, 75, 125*ENERGY_STAT, 10,
+energy_bar = Button("", 502, 75, 0, 10,
                     'white', 'white',"cornsilk", False, None)
 
 # Create Button list and add all created buttons
@@ -115,7 +123,7 @@ HOME_BUTTONS = [btn_hunger, btn_hydration, btn_mood, btn_energy,
                 hunger_shadow, hydration_shadow, mood_shadow,
                 energy_shadow, hunger_bar, hydration_bar, mood_bar,
                 energy_bar, btn_inventory, btn_shop, btn_quit, 
-                btn_goals]
+                btn_goals, btn_credits]
 
 
 # Uploading dragon PNGs and converting into pygame images
