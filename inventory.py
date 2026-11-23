@@ -52,8 +52,8 @@ class Inventory(Scene):
 
     def update_credits(self):
         self.buttons[-1] = Button(
-             f"Credits: {self.player.get_credits()}", 490, SCREEN_HEIGHT-95, 150, 75, 
-                'lightgreen', 'lawngreen', 'white', False, False, None)
+             f"Credits: {self.player.get_credits()}", 465, SCREEN_HEIGHT- 75, 175, 50, 
+                'lightgreen', 'lightgreen', 'white', False, False, None)
 
 
 

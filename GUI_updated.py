@@ -1,7 +1,7 @@
 import pygame
 import sys
 from inventory import Inventory, INVENTORY_BUTTONS
-from shop import Shop, SHOP_BUTTONS, SHOP_SPRITES, MESSAGE_SPRITES
+from shop import Shop, SHOP_BUTTONS, SHOP_SPRITES #MESSAGE_SPRITES
 from home import Home, HOME_SPRITES, HOME_BUTTONS, BACKGROUND
 from button import Button
 from pet_sprite import PetSprite
@@ -9,7 +9,7 @@ from goal_log import GoalLog, GOAL_BUTTONS
 from pet import Pet
 from player import Player
 import random
-
+from items import ITEMS
 
 
 
@@ -33,7 +33,7 @@ class Game:
         self.inventory = Inventory(self.screen, self.gameStateManager, self.pet, 
                                    self.player, INVENTORY_BUTTONS)
         self.shop = Shop(self.screen, self.gameStateManager, self.pet, self.player,
-                         None, SHOP_BUTTONS, SHOP_SPRITES, MESSAGE_SPRITES)
+                         None, SHOP_BUTTONS, SHOP_SPRITES, ITEMS)
         self.goallog = GoalLog(self.screen, self.gameStateManager, self.pet, 
                                self.player, [], GOAL_BUTTONS)
         self.states = {'home':self.home, 'inventory':self.inventory,
@@ -75,8 +75,9 @@ class GameStateManager:
         return self.current_state
 
     def set_state(self, new_state):
+        if new_state not in self.state_stack:
+            self.state_stack.append(new_state)
         self.current_state = new_state
-        self.state_stack.append(new_state)
 
     def go_back(self):
         self.state_stack.pop()

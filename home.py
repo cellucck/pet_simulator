@@ -69,7 +69,7 @@ class Home(Scene):
 
     def update_credits(self):
         self.buttons[-1] = Button(f"Credits: {self.player.get_credits()}", 490, SCREEN_HEIGHT-95, 150, 75, 
-                     'lightgreen', 'lawngreen', 'white', False, False, None)
+                     'green3', 'green3', 'white', False, False, None)
 
 
 
@@ -92,7 +92,7 @@ btn_energy = Button('Energy', 490, 25, 150, 75,
                     'orchid3', 'orchid2',"cornsilk", False, True, Home.open_play)
 
 btn_credits = Button("Credits: ", 490, SCREEN_HEIGHT-95, 150, 75, 
-                     'lightgreen', 'lawngreen', 'white', False, False, None)
+                     'green3', 'green3', 'white', False, False, None)
 
 # Create buttons that represent the actual PetCare statues
 hunger_shadow = Button("", 22, 75, 125, 10,

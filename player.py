@@ -12,7 +12,7 @@ class Player:
         self.password: str = password
         self.username: str = username 
         self.pets: list = []
-        self.credits: int = 100
+        self.credits: int = 50
         self.inventory: dict = {}
 
 
