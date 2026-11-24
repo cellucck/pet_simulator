@@ -1,3 +1,5 @@
+from items import SMALL_ITEMS, small_items
+
 '''
 File constructing the Player class, main actor
 of our system. It contains their account/irl 
@@ -13,7 +15,7 @@ class Player:
         self.username: str = username 
         self.pets: list = []
         self.credits: int = 50
-        self.inventory: dict = {}
+        self.inventory: dict = {}  # {item type : quantity}
 
 
 #~~~~~~~~~~~~~~Attribute Getters~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,7 +97,7 @@ class Player:
         pass
 
 
-    def buy_item(self, current_credits, shop_item):
+    def buy_item(self, shop_item: str):
         '''
         this method actually 'purchases' an in shop item which both
         - adds the item(s) to the player's inventory
@@ -106,10 +108,27 @@ class Player:
 
         arguments
         current_credits :int: how many credits the player has to spend
-        shop_item :item: the item that the player is trying to buy
+        shop_item :str: the id of the item the player is trying to buy
         '''
-        pass
+        cost = shop_item.get_cost()
+        name = shop_item.get_name()
+        if cost > self.credits:
+            print("You don't have enough money to buy this item!")
+            
+        else:
+            print(f"You've successfully Bought a {name}!")
+            print(f"{name} has been added to your inventory")
+            self.credits -= cost
+            if shop_item in self.inventory:
+                self.inventory[shop_item] += 1
+                pass
+            else:
+                self.inventory[shop_item] = 1
 
+        for item in self.inventory:
+            print(f'{item.get_name()} : {self.inventory[item]}')
+
+       
 
     def create_goal(self):
         '''

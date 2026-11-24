@@ -172,3 +172,4 @@ class MazeGame:
                 message,
                 message.get_rect(center=(325, 600))
             )
+

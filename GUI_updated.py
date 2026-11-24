@@ -9,7 +9,7 @@ from goal_log import GoalLog, GOAL_BUTTONS
 from pet import Pet
 from player import Player
 import random
-from items import ITEMS
+from items import SMALL_ITEMS
 
 
 
@@ -33,7 +33,7 @@ class Game:
         self.inventory = Inventory(self.screen, self.gameStateManager, self.pet, 
                                    self.player, INVENTORY_BUTTONS)
         self.shop = Shop(self.screen, self.gameStateManager, self.pet, self.player,
-                         None, SHOP_BUTTONS, SHOP_SPRITES, ITEMS)
+                         None, SHOP_BUTTONS, SHOP_SPRITES, SMALL_ITEMS)
         self.goallog = GoalLog(self.screen, self.gameStateManager, self.pet, 
                                self.player, [], GOAL_BUTTONS)
         self.states = {'home':self.home, 'inventory':self.inventory,
