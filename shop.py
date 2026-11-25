@@ -44,7 +44,7 @@ class Shop(Scene):
         self.item_assignments = random.sample(range(1, 9), 8)
         self.item_sprites = pygame.sprite.Group()
         for i in range(len(self.products)):
-            new_size = (125, 125)
+            new_size = (100, 100)
             item = self.products[i]
             image = pygame.image.load(item.get_image_path())
             scaled_image = pygame.transform.scale(image, new_size)
@@ -55,7 +55,7 @@ class Shop(Scene):
                                        x, y, 125, 125, 
                                      'bisque2','blanchedalmond', 'black', 
                                      True, True, Shop.inspect_item)
-            new_sprite = PetSprite(scaled_image, scaled_image, scaled_image, x, y)
+            new_sprite = PetSprite(scaled_image, scaled_image, scaled_image, x+15, y+25)
             self.item_sprites.add(new_sprite)
 
 
@@ -117,7 +117,9 @@ class Shop(Scene):
             product = self.products[i-2]
             if button.rect.collidepoint(mouse_pos):
                 print(f"You've Inspected a {product.get_name()}")
-                self.player.buy_item(product)
+                #self.player.buy_item(product)
+                self.player.set_unconfirmed_item(product)
+                self.gameStateManager.set_state('purchase')
 
         #self.new_comment_type = 'item'
         #self.display_shopkeeper_text()

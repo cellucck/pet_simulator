@@ -18,7 +18,9 @@ class Inventory(Scene):
             self.buttons = button_list
             self.sprites = sprites_list
             self.inventory = self.player.get_inventory()
-            self.owned_items = list(self.inventory.keys())
+            self.owned_items = self.player.get_items()
+            self.owned_quantities = self.player.get_quantities()
+            owned_items = list(self.inventory.keys())
             
             
 
@@ -51,12 +53,21 @@ class Inventory(Scene):
                  button.update(event, self)
 
 
+
         for button in self.buttons:
             button.draw(self.display)
         self.update_credits()
-        if self.player.get_inventory != self.inventory:
-            self.update_inventory()
+        if self.player.get_items() != self.owned_items:
+             self.owned_items = self.player.get_items()
+             self.draw_owned_items()
+
+        if self.player.get_quantities() != self.owned_quantities:
+             self.owned_quantities = self.player.get_quantities()
+             self.draw_owned_items()
+             
+
         self.owned_item_sprites.draw(self.display)
+    
 
         pygame.display.flip()
 
@@ -72,6 +83,24 @@ class Inventory(Scene):
     def quit_game(self):
             pygame.quit()
             sys.exit()
+
+    def draw_owned_items(self):
+         owned_items = self.owned_items
+         for i in range(len(owned_items)):
+            new_size = (100, 100)
+            item = owned_items[i]
+            quantity = self.inventory[item]
+            image = pygame.image.load(item.get_image_path())
+            image = pygame.transform.scale(image, new_size)
+            location = self.item_slots[i+1]
+            x = location[0]
+            y = location[1]
+            print(f'Button index {i+3}')
+            self.buttons[i+3] = Button(f"Count: {quantity}", x, y, 125, 125, 'bisque2', 
+                    'blanchedalmond', 'black',
+                    True, True, Inventory.inspect_item)
+            new_sprite = PetSprite(image, image, image, x+15, y+25)
+            self.owned_item_sprites.add(new_sprite)
     
     def inspect_item(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -90,20 +119,23 @@ class Inventory(Scene):
                 'lightgreen', 'lightgreen', 'white', False, False, None)
 
     def update_inventory(self):
-        self.inventory = self.player.get_inventory()
-        self.owned_items = list(self.inventory.keys())
-        for i in range(len(self.owned_items)):
-            new_size = (125, 125)
-            item = self.owned_items[i]
+        print('Updating')
+        owned_items = list(self.inventory.keys())
+        for i in range(len(owned_items)):
+            new_size = (100, 100)
+            item = owned_items[i]
             quantity = self.inventory[item]
             image = pygame.image.load(item.get_image_path())
-            x = self.item_slots[i+1][0]
-            y = self.item_slots[i+1][1]
+            image = pygame.transform.scale(image, new_size)
+            location = self.item_slots[i+1]
+            x = location[0]
+            y = location[1]
             self.buttons[i+3] = Button(f"Count: {quantity}", x, y, 125, 125, 'bisque2', 
                     'blanchedalmond', 'black',
                     True, True, Inventory.inspect_item)
-            new_sprite = PetSprite(image, image, image, x, y)
+            new_sprite = PetSprite(image, image, image, x+15, y+25)
             self.owned_item_sprites.add(new_sprite)
+            self.owned_item_sprites.draw(self.display)
 
 
 
@@ -133,8 +165,11 @@ def item_slot(i, j):
 
 
 
-for i in range(len(ROWS)):
-    for j in range(len(COLUMNS)):
+for j in range(len(COLUMNS)):
+    for i in range(len(ROWS)):
          item_slot(i, j)
 
+
+for i in range(3, len(INVENTORY_BUTTONS)):
+     print(i, INVENTORY_BUTTONS[i].rect)
 

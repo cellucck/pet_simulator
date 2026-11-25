@@ -10,6 +10,7 @@ from pet import Pet
 from player import Player
 import random
 from items import SMALL_ITEMS
+from purchase_conf import PurchaseConfirmation, CONF_BUTTONS
 
 
 
@@ -36,8 +37,12 @@ class Game:
                          None, SHOP_BUTTONS, SHOP_SPRITES, SMALL_ITEMS)
         self.goallog = GoalLog(self.screen, self.gameStateManager, self.pet, 
                                self.player, [], GOAL_BUTTONS)
+        self.purchase_confirmation = PurchaseConfirmation(self.screen, self.gameStateManager, 
+                                                          self.pet, self.player, CONF_BUTTONS)
         self.states = {'home':self.home, 'inventory':self.inventory,
-                       'shop':self.shop, 'goal':self.goallog}
+                       'shop':self.shop, 'goal':self.goallog,
+                       'purchase':self.purchase_confirmation, 
+                       }
 
 
 

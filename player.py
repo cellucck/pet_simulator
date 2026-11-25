@@ -15,7 +15,11 @@ class Player:
         self.username: str = username 
         self.pets: list = []
         self.credits: int = 50
+        self.owned_items: list = []
+        self.owned_quantities: list = []
         self.inventory: dict = {}  # {item type : quantity}
+        self.unconfirmed_item = None
+
 
 
 #~~~~~~~~~~~~~~Attribute Getters~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,9 +41,27 @@ class Player:
     def get_inventory(self):
         return self.inventory
 
+    def get_items(self):
+        return self.owned_items
+
+    def get_quantities(self):
+        return self.owned_quantities
+
+    def get_unconfirmed_item(self):
+        return self.unconfirmed_item
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def update_items(self):
+        self.owned_items = list(self.inventory.keys())
 
+    def update_quantities(self):
+        self.owned_quantities = list(self.inventory.values())
+
+    def set_unconfirmed_item(self, new_product):
+        self.unconfirmed_item = new_product
+    
+    
     def feed_pet(self, pet, food_item):
         '''
         method to feed a specified pet (in class player has multiple)
@@ -97,7 +119,7 @@ class Player:
         pass
 
 
-    def buy_item(self, shop_item: str):
+    def buy_item(self, shop_item):
         '''
         this method actually 'purchases' an in shop item which both
         - adds the item(s) to the player's inventory
@@ -121,9 +143,10 @@ class Player:
             self.credits -= cost
             if shop_item in self.inventory:
                 self.inventory[shop_item] += 1
-                pass
             else:
                 self.inventory[shop_item] = 1
+            self.update_items()
+            self.update_quantities()
 
         for item in self.inventory:
             print(f'{item.get_name()} : {self.inventory[item]}')
